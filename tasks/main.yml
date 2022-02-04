@@ -1,0 +1,31 @@
+---
+# tasks file for laptop
+
+   - name: "Check if wine is installed"
+     package_facts:
+        manager: "auto"
+
+   - name: Install, configure, and start Apache
+     block:
+        - name: Wine | Install Wine and all Dependencies
+          command: "{{ item }}"
+          loop:
+            - "dpkg --add-architecture i386"
+            - "wget -nc https://dl.winehq.org/wine-builds/winehq.key"
+            - "apt-key add winehq.key"
+            - "rm winehq.key"
+
+        - name: Add wine repo
+          apt_repository:
+             repo: deb https://dl.winehq.org/wine-builds/ubuntu/ focal main
+             state: present
+
+        - name: Installl
+          apt:
+           name:
+             - winehq-staging
+           state: latest
+           install_recommends: yes
+           update_cache: yes
+     
+     when: "'winehq-staging' not in ansible_facts.packages"
