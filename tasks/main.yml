@@ -1,5 +1,5 @@
 ---
-# tasks file for laptop
+# tasks file for AnsibleWINE
 
    - name: "Check if wine is installed"
      package_facts:
